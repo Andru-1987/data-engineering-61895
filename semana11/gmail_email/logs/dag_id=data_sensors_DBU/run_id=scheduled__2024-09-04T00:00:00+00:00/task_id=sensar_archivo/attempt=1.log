@@ -1,0 +1,65 @@
+[2024-09-05T01:29:24.413+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-09-05T01:29:24.432+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: data_sensors_DBU.sensar_archivo scheduled__2024-09-04T00:00:00+00:00 [queued]>
+[2024-09-05T01:29:24.438+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: data_sensors_DBU.sensar_archivo scheduled__2024-09-04T00:00:00+00:00 [queued]>
+[2024-09-05T01:29:24.439+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 3
+[2024-09-05T01:29:24.458+0000] {taskinstance.py:2330} INFO - Executing <Task(FileSensor): sensar_archivo> on 2024-09-04 00:00:00+00:00
+[2024-09-05T01:29:24.463+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=63) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-09-05T01:29:24.465+0000] {standard_task_runner.py:63} INFO - Started process 64 to run task
+[2024-09-05T01:29:24.465+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'data_sensors_DBU', 'sensar_archivo', 'scheduled__2024-09-04T00:00:00+00:00', '--job-id', '12', '--raw', '--subdir', 'DAGS_FOLDER/dag_sensor_csv.py', '--cfg-path', '/tmp/tmpxrkkao7k']
+[2024-09-05T01:29:24.466+0000] {standard_task_runner.py:91} INFO - Job 12: Subtask sensar_archivo
+[2024-09-05T01:29:24.507+0000] {task_command.py:426} INFO - Running <TaskInstance: data_sensors_DBU.sensar_archivo scheduled__2024-09-04T00:00:00+00:00 [running]> on host 2374d61fd1eb
+[2024-09-05T01:29:24.594+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_EMAIL='anderson.coder.space@gmail.com' AIRFLOW_CTX_DAG_OWNER='ander_o' AIRFLOW_CTX_DAG_ID='data_sensors_DBU' AIRFLOW_CTX_TASK_ID='sensar_archivo' AIRFLOW_CTX_EXECUTION_DATE='2024-09-04T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-09-04T00:00:00+00:00'
+[2024-09-05T01:29:24.595+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-09-05T01:29:24.619+0000] {baseoperator.py:400} WARNING - FileSensor.execute cannot be called outside TaskInstance!
+[2024-09-05T01:29:24.625+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-09-05T01:29:24.634+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/sensors/filesystem.py", line 99, in execute
+    super().execute(context=context)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/sensors/base.py", line 264, in execute
+    raise e
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/sensors/base.py", line 246, in execute
+    poke_return = self.poke(context)
+                  ^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/sensors/filesystem.py", line 85, in poke
+    self.log.info("Poking for file %s", self.path)
+                                        ^^^^^^^^^
+  File "/usr/local/lib/python3.12/functools.py", line 995, in __get__
+    val = self.func(instance)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/sensors/filesystem.py", line 79, in path
+    hook = FSHook(self.fs_conn_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/hooks/filesystem.py", line 64, in __init__
+    conn = self.get_connection(fs_conn_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/hooks/base.py", line 83, in get_connection
+    conn = Connection.get_connection_from_secrets(conn_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/connection.py", line 519, in get_connection_from_secrets
+    raise AirflowNotFoundException(f"The conn_id `{conn_id}` isn't defined")
+airflow.exceptions.AirflowNotFoundException: The conn_id `csv_files` isn't defined
+[2024-09-05T01:29:24.638+0000] {taskinstance.py:1206} INFO - Marking task as UP_FOR_RETRY. dag_id=data_sensors_DBU, task_id=sensar_archivo, run_id=scheduled__2024-09-04T00:00:00+00:00, execution_date=20240904T000000, start_date=20240905T012924, end_date=20240905T012924
+[2024-09-05T01:29:24.656+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/utils/email.py:154: RemovedInAirflow3Warning: Fetching SMTP credentials from configuration variables will be deprecated in a future release. Please set credentials using a connection instead.
+  send_mime_email(e_from=mail_from, e_to=recipients, mime_msg=msg, conn_id=conn_id, dryrun=dryrun)
+
+[2024-09-05T01:29:24.656+0000] {email.py:271} INFO - Email alerting: attempt 1
+[2024-09-05T01:29:24.891+0000] {email.py:282} INFO - Sent an alert email to ['anderson.coder.space@gmail.com']
+[2024-09-05T01:29:25.329+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 12 for task sensar_archivo (The conn_id `csv_files` isn't defined; 64)
+[2024-09-05T01:29:25.366+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2024-09-05T01:29:25.384+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2024-09-05T01:29:25.391+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

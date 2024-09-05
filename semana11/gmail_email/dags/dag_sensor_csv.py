@@ -12,7 +12,7 @@ default_args={
     'email': ['anderson.coder.space@gmail.com'],
     'email_on_retry':True,
     'email_on_failure': False,
-    'retries':10,
+    'retries':2,
     'retry_delay': timedelta(minutes=1)
 }
 

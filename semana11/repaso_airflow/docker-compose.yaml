@@ -4,16 +4,10 @@ x-airflow-common:
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.9.2}
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.10.0}
   # build: .
   environment:
     &airflow-common-env
-    # USO DE VARIABLES
-    AIRFLOW_VAR_SUBJECT_MAIL: 'Se ha cargado un nuevo File'
-    AIRFLOW_VAR_EMAIL: 'anderson.coder.space@gmail.com'
-    AIRFLOW_VAR_EMAIL_PASSWORD: "${EMAIL_PASSWORD}"
-    AIRFLOW_VAR_TO_ADDRESS: 'anderson.coder.space@gmail.com'    
-
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
@@ -21,7 +15,6 @@ x-airflow-common:
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    AIRFLOW__CORE__TEST_CONNECTION: 'Enabled'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
@@ -39,8 +32,6 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
-    - ./config/airflow.cfg:/opt/airflow/airflow.cfg
-    - ./data:/opt/airflow/data
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -201,12 +192,6 @@ services:
         mkdir -p /sources/logs /sources/dags /sources/plugins
         chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
         exec /entrypoint airflow version
-        # EXCECUTION PARA AGREGAR AUTOMATICAMENTE EL CONN_ID
-        airflow connections add 'csv_files' \
-            --conn-type 'fs' \
-            --conn-extra '{"path": "/opt/airflow/data/"}'
-
-
     # yamllint enable rule:line-length
     environment:
       <<: *airflow-common-env
