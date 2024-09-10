@@ -3,7 +3,7 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime
 
-from modules import get_defaultairflow_args, extraer_data, transformar_data, cargar_data
+from modules import get_defaultairflow_args, extraer_data, transformar_data, cargar_data, send_email
 
 with DAG(
     dag_id="bitcoin_etl",
@@ -36,6 +36,11 @@ with DAG(
         python_callable=cargar_data,
         op_args=args,
     )
+    # 4. Mailing
+    send_email = PythonOperator(
+        task_id="mail_sender",
+        python_callable=send_email,
+    )
 
     # Task dependencies
-    task_extract >> task_transform >> task_load_data
+    task_extract >> task_transform >> task_load_data >> send_email

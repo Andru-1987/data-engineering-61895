@@ -11,7 +11,7 @@ logging.basicConfig(
     format='PRODUCER: %(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),  # Muestra los logs en la consola
-        logging.FileHandler('logger.log')  # Guarda los logs en un archivo
+        logging.FileHandler('/logger.log')  # Guarda los logs en un archivo
     ]
 )
 
@@ -67,6 +67,21 @@ def produce_messages():
     create_table_if_not_exists()
 
     running_process()
+
+
+    # **Step 1: Send all rows already in the table**
+    try:
+        cursor.execute(f'SELECT * FROM {table_name_producer} ORDER BY timestamp ASC')
+        rows = cursor.fetchall()
+        for row in rows:
+            producer.send(topic, dict(row))
+            producer.flush()
+            logger.info(f"Sent message: {dict(row)}")
+            last_timestamp = row['timestamp']  # Track the latest timestamp
+    except Exception as e:
+        logger.error(f"Error sending initial batch of messages: {e}")
+
+
 
     while True:
         try:

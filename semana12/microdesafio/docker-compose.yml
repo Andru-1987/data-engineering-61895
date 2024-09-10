@@ -19,13 +19,12 @@
         KAFKA_BROKER_ID: 1
         KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
         KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-        # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092,PLAINTEXT_INTERNAL://broker:29092
-        # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
         KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092
         KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
         KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+        KAFKA_TOPIC: ${TOPIC}
       ports:
         - "9092:9092"
 
@@ -64,7 +63,7 @@
       volumes:
         - ./producer:/app
         - ./database:/database
-        - ./producer.log:/app/producer.log
+        - ./logger.log:/logger.log
       env_file:
         - .env
       restart: always
@@ -81,8 +80,8 @@
       volumes:
         - ./consumer:/app
         - ./database:/database
+        - ./logger.log:/logger.log
       restart: always
       env_file:
         - .env
       command: sh -c "sleep 10 && python /app/consumer.py"
-
